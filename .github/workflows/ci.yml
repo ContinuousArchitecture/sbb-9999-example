@@ -1,0 +1,21 @@
+name: CI Aplicación
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "artifact/**"
+      - ".github/workflows/**"
+
+  push:
+    branches:
+      - main
+    paths:
+      - "artifact/**"
+      - ".github/workflows/**"
+
+jobs:
+  execute_rules:
+    name: Ejecutar reglas
+    uses: fad3dc07-e43b-4db5-92bd-fbfecbc5ae1b/ci-architecture-governance/.github/workflows/compliance.yml@main
