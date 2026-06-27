@@ -1,4 +1,4 @@
-name: Orchestrate Design Governance
+name: Governance Client
 
 on:
   pull_request:
