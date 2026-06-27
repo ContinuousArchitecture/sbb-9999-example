@@ -16,19 +16,14 @@ on:
       - ".github/workflows/**"
 
 jobs:
-  validate-structure:
-    name: Validate repository structure
-    uses: fad3dc07-e43b-4db5-92bd-fbfecbc5ae1b/ci-architecture-governance/.github/workflows/validate-repository-structure.yml@main
-
-  validate-source:
-    name: Validate source document
-    uses: fad3dc07-e43b-4db5-92bd-fbfecbc5ae1b/ci-architecture-governance/.github/workflows/validate-archi-archimate-source.yml@main
+  validate:
+    name: Validate manifest
+    uses: fad3dc07-e43b-4db5-92bd-fbfecbc5ae1b/ci-architecture-governance/.github/workflows/validate.yml@main
 
   report:
     name: Report validation results
     needs:
-      - validate-structure
-      - validate-source
+      - validate
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -41,8 +36,7 @@ jobs:
       - name: Print consolidated report
         shell: bash
         run: |
-          status="$(STRUCTURE_REPORT="$STRUCTURE_REPORT" SOURCE_REPORT="$SOURCE_REPORT" node governance/scripts/render-validation-report.mjs)"
+          status="$(VALIDATION_REPORT="$VALIDATION_REPORT" node governance/scripts/render-validation-summary.mjs)"
           if [ "$status" != "PASS" ]; then exit 1; fi
         env:
-          STRUCTURE_REPORT: ${{ needs.validate-structure.outputs.report }}
-          SOURCE_REPORT: ${{ needs.validate-source.outputs.report }}
+          VALIDATION_REPORT: ${{ needs.validate.outputs.report }}
